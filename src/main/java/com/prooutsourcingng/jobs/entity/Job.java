@@ -2,6 +2,9 @@ package com.prooutsourcingng.jobs.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "jobs")
 public class Job {
@@ -20,6 +23,10 @@ public class Job {
     @Column(columnDefinition = "tinyint(1) default true")
     private Boolean published = true;
 
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Application> applications = new HashSet<>();
+
+    //Getters and Setters ----------------
     public Long getId() {
         return id;
     }
