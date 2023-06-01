@@ -30,6 +30,7 @@ public class Application {
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
 
+    //Job object getter and setter
     public Job getJob() {
         return job;
     }

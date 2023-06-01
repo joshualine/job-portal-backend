@@ -1,8 +1,11 @@
 package com.prooutsourcingng.jobs.service.impl;
 
 import com.prooutsourcingng.jobs.entity.Application;
+import com.prooutsourcingng.jobs.entity.Job;
+import com.prooutsourcingng.jobs.exception.ResourceNotFoundException;
 import com.prooutsourcingng.jobs.payload.ApplicationDto;
 import com.prooutsourcingng.jobs.repository.ApplicationRepository;
+import com.prooutsourcingng.jobs.repository.JobRepository;
 import com.prooutsourcingng.jobs.service.ApplicationService;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +13,26 @@ import org.springframework.stereotype.Service;
 public class ApplicationServiceImpl implements ApplicationService {
 
     private ApplicationRepository applicationRepository;
+    private JobRepository jobRepository;
 
-    public ApplicationServiceImpl(ApplicationRepository applicationRepository) {
+    public ApplicationServiceImpl(ApplicationRepository applicationRepository, JobRepository jobRepository) {
         this.applicationRepository = applicationRepository;
+        this.jobRepository = jobRepository;
     }
 
     @Override
     public ApplicationDto createApplication(long job_id, ApplicationDto applicationDto) {
         //Convert DTO to Entity
         Application application = mapToEntity(applicationDto);
+
+        //retrieve Job entity by id
+        Job job = jobRepository.findById(job_id).orElseThrow(() ->
+                new ResourceNotFoundException("Job", "id", job_id));
+
+        //Set Job to Application entity
+        application.setJob(job);
+
+        //Application Entity to DB
         Application newApplication = applicationRepository.save(application);
         return mapToDTO(newApplication);
     }

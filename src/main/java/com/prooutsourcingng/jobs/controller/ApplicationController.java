@@ -4,7 +4,6 @@ import com.prooutsourcingng.jobs.payload.ApplicationDto;
 import com.prooutsourcingng.jobs.service.ApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
