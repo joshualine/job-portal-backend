@@ -9,6 +9,9 @@ import com.prooutsourcingng.jobs.repository.JobRepository;
 import com.prooutsourcingng.jobs.service.ApplicationService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -35,6 +38,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         //Application Entity to DB
         Application newApplication = applicationRepository.save(application);
         return mapToDTO(newApplication);
+    }
+
+    @Override
+    public List<ApplicationDto> getApplicationsByJobId(long job_Id) {
+        // retrieve applications by Job_id
+        List<Application> applications = applicationRepository.findByJobId(job_Id);
+
+        // Convert list of Application entities to list of Application DTOs
+        return applications.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     //Convert DTO to Entity Method

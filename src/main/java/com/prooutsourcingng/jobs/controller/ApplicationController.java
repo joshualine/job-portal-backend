@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/jobs/{job_id}/applications")
 public class ApplicationController {
@@ -16,10 +18,16 @@ public class ApplicationController {
         this.applicationService = applicationService;
     }
 
-    // Create Job-Application REST-APIs
+    // Create Application for a given Job
     @PostMapping
     public ResponseEntity<ApplicationDto> createApplication(@PathVariable(value = "job_id") long job_id,
                                                             @RequestBody ApplicationDto applicationDto) {
         return  new ResponseEntity<>(applicationService.createApplication(job_id, applicationDto), HttpStatus.CREATED);
+    }
+
+    // Get all Applications for a given Job
+    @GetMapping
+    public List<ApplicationDto> getApplicationsByJobId(@PathVariable(value = "job_id") Long job_id) {
+        return applicationService.getApplicationsByJobId(job_id);
     }
 }
