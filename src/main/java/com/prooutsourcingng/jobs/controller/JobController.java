@@ -4,6 +4,7 @@ import com.prooutsourcingng.jobs.payload.JobDto;
 import com.prooutsourcingng.jobs.service.JobService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class JobController {
     }
 
     //Create Job REST-API
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<JobDto> createJob(@RequestBody JobDto jobDto){
         return new ResponseEntity<>(jobService.createJob(jobDto), HttpStatus.CREATED);

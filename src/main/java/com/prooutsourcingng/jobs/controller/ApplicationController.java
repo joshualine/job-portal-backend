@@ -4,6 +4,7 @@ import com.prooutsourcingng.jobs.payload.ApplicationDto;
 import com.prooutsourcingng.jobs.service.ApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ApplicationController {
     }
 
     // Get all Applications for a given Job
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<ApplicationDto> getApplicationsByJobId(@PathVariable(value = "job_id") Long job_id) {
         return applicationService.getApplicationsByJobId(job_id);
