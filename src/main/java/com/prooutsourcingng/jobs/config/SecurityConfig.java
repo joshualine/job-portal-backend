@@ -38,7 +38,8 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
 //                        authorize.anyRequest().authenticated()).httpBasic(Customizer.withDefaults());
-                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()        //Allow GET Jobs without Auth
+                                .requestMatchers(HttpMethod.POST, "/api/jobs/**").permitAll()   //Allow POST application without Auth
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 
