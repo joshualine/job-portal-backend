@@ -3,7 +3,9 @@ package com.prooutsourcingng.jobs.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -18,48 +20,49 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private  UserDetailsService userDetailsService;
+
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+
     @Bean
     public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws  Exception {
+        return configuration.getAuthenticationManager();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-
-//        http.authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers("/api/jobs/2/applications").permitAll()
-//                        .anyRequest().authenticated()
-//        ).formLogin((form) -> form
-//                        .loginPage("/")
-//                        .permitAll()
-//                )
-//                .logout((logout) -> logout.permitAll());
-
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-//                        authorize.anyRequest().authenticated()).httpBasic(Customizer.withDefaults());
                         authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()        //Allow GET Jobs without Auth
                                 .requestMatchers(HttpMethod.POST, "/api/jobs/**").permitAll()   //Allow POST application without Auth
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
-
                 return  http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("user"))
-                .roles("USER")
-                .build();
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(passwordEncoder().encode("user"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user, admin);
+//    }
 
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
 }
