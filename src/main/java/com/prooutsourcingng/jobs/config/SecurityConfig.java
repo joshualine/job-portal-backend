@@ -40,10 +40,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable()
-                .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()        //Allow GET Jobs without Auth
-                                .requestMatchers(HttpMethod.POST, "/api/jobs/**").permitAll()   //Allow POST application without Auth
-                                .anyRequest().authenticated())
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()        //Allow GET Jobs without Auth
+                        .requestMatchers(HttpMethod.POST, "/api/jobs/**").permitAll()   //Allow POST application without Auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
                 return  http.build();
     }
